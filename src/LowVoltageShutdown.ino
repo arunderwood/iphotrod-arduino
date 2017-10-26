@@ -112,6 +112,7 @@ void loop()
 {
     bool   pi_running;
     float  supply_voltage;
+    float  supply_current;
 
     // Enter power down state with ADC and BOD module disabled.
     // Wake up when wake up pin is low.
@@ -206,8 +207,13 @@ void loop()
             SleepyPi.piShutdown();
             SleepyPi.enableExtPower(false);
         }
-        // Send voltage reading to Pi for logging
+        supply_current = SleepyPi.rpiCurrent();
+        // Send voltage and current reading to Pi for logging
+        Serial.print("battv:");
         Serial.println(supply_voltage);
+
+        Serial.print("battc:");
+        Serial.println(supply_current);
         delay(500);
     } else {
         // Check for voltage recovery
