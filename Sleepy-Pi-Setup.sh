@@ -128,15 +128,15 @@ echo 'Setup the Reset Pin...'
 program="autoreset"
 condition=$(which $program 2>/dev/null | grep -v "not found" | wc -l)
 if [ "$condition" -eq 0 ]; then
+    cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" || exit 1
     wget https://github.com/spellfoundry/avrdude-rpi/archive/master.zip
     unzip master.zip
     cd ./avrdude-rpi-master/ || exit 1
     cp autoreset /usr/bin
     cp avrdude-autoreset /usr/bin
     mv /usr/bin/avrdude /usr/bin/avrdude-original
-    cd /home/pi || exit 1
-    rm -f /home/pi/master.zip
-    rm -R -f /home/pi/avrdude-rpi-master
+    rm -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/master.zip
+    rm -R -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/avrdude-rpi-master
     ln -s /usr/bin/avrdude-autoreset /usr/bin/avrdude
 else
     echo "$program is already installed - skipping..."
@@ -151,7 +151,7 @@ if grep -q 'shutdowncheck.py' /etc/rc.local; then
     echo 'shutdowncheck.py is already setup - skipping...'
 else
     [ ! -d /usr/local/bin/SleepyPi  ] && mkdir /usr/local/bin/SleepyPi
-    mv -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/shutdowncheck.py /home/pi/bin/SleepyPi
+    mv -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/shutdowncheck.py /usr/local/bin/SleepyPi
     sed -i '/exit 0/i python /usr/local/bin/SleepyPi/shutdowncheck.py &' /etc/rc.local
 fi
 
@@ -159,54 +159,27 @@ fi
 
 ## Adding the Sleepy Pi to the Arduino environment
 echo 'Adding the Sleepy Pi to the Arduino environment...'
-# ...setup sketchbook
-if [ -d "/home/pi/sketchbook" ]
-then
-    echo "sketchbook exists - skipping..."
-else
-    mkdir /home/pi/sketchbook
-fi
-# ...setup sketchbook/libraries
-if [ -d "/home/pi/sketchbook/libraries" ]
-then
-    echo "sketchbook/libraries exists - skipping..."
-else
-    mkdir /home/pi/sketchbook/libraries
-fi
-# .../sketchbook/hardware
-if [ -d "/home/pi/sketchbook/hardware" ]; then
-    echo "sketchbook/hardware exists - skipping..."
-else
-    mkdir /home/pi/sketchbook/hardware 
-fi
-# .../sketchbook/hardware/sleepy_pi2
-if [ -d "/home/pi/sketchbook/hardware/sleepy_pi2" ]; then
-    echo "sketchbook/hardware/sleepy_pi2 exists - skipping..."
-else
-    mkdir /home/pi/sketchbook/hardware/sleepy_pi2
-    mv "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/boards.txt /home/pi/sketchbook/hardware/sleepy_pi2
-fi
 
-# .../sketchbook/hardware/sleepy_pi
-if [ -d "/home/pi/sketchbook/hardware/sleepy_pi" ]; then
-    echo "sketchbook/hardware/sleepy_pi exists - skipping..."
-else
-    mkdir /home/pi/sketchbook/hardware/sleepy_pi
-    mv "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/boards.txt /home/pi/sketchbook/hardware/sleepy_pi
-fi
+mkdir -p /home/pi/sketchbook/libraries
+mkdir -p /home/pi/sketchbook/hardware 
+mkdir -p /home/pi/sketchbook/hardware/Sleepy_pi2
+mkdir -p /home/pi/sketchbook/hardware/Sleepy_pi
+
+mv "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/boards.txt /home/pi/sketchbook/hardware/Sleepy_pi2
+mv "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/boards.txt /home/pi/sketchbook/hardware/Sleepy_pi
 
 ## Setup the Sleepy Pi Libraries
 echo 'Setting up the Sleepy Pi Libraries...'
 cd /home/pi/sketchbook/libraries/ || exit 1
-if [ -d "/home/pi/sketchbook/libraries/sleepy_pi2" ]; then
-    echo "sleepy_pi2 Library exists - skipping..."
+if [ -d "/home/pi/sketchbook/libraries/Sleepy_pi2" ]; then
+    echo "Sleepy_pi2 Library exists - skipping..."
     # could do a git pull here?
 else
     echo "Installing SleepyPi 2 Library..."
     git clone https://github.com/SpellFoundry/SleepyPi2.git
 fi
-if [ -d "/home/pi/sketchbook/libraries/sleepy_pi" ]; then
-    echo "sleepy_pi Library exists - skipping..."
+if [ -d "/home/pi/sketchbook/libraries/Sleepy_pi" ]; then
+    echo "Sleepy_pi Library exists - skipping..."
     # could do a git pull here?
 else
     echo "Installing SleepyPi Library..."
@@ -290,7 +263,7 @@ sed -i '/systz/d' /lib/udev/hwclock-set
 
 ## Setup PlatformIO
 
-sudo -H -u pi pip install -U platformio
+sudo -H -u pi pip2.7 install -U platformio
 
 ##-------------------------------------------------------------------------------------------------
 echo "Sleepy Pi setup complete! Please reboot."
