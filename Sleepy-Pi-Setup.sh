@@ -284,12 +284,12 @@ else
     echo 'dtoverlay=i2c-rtc,pcf8523' | sudo tee -a /boot/config.txt
 fi
 
-if grep -q 'if [ -e /run/systemd/system ] ; then' /lib/udev/hwclock-set; then
-    sed -e '/if [ -e /run/systemd/system ] ; then/,+3d' /lib/udev/hwclock-set
+if grep -q '/run/systemd/system' /lib/udev/hwclock-set; then
+    sed -e '//run/systemd/system/,+3d' /lib/udev/hwclock-set
 fi
 
-if grep -q '/sbin/hwclock --rtc=$dev --systz --badyear' /lib/udev/hwclock-set; then
-    sed sed -i '//sbin/hwclock --rtc=$dev --systz --badyear/d' /lib/udev/hwclock-set
+if grep -q 'systz' /lib/udev/hwclock-set; then
+    sed sed -i '/systz/d' /lib/udev/hwclock-set
 fi
 
 ##-------------------------------------------------------------------------------------------------
