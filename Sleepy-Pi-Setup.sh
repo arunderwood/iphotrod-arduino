@@ -284,13 +284,13 @@ else
     echo 'dtoverlay=i2c-rtc,pcf8523' | sudo tee -a /boot/config.txt
 fi
 
-if grep -q '/run/systemd/system' /lib/udev/hwclock-set; then
-    sed -e '//run/systemd/system/,+3d' /lib/udev/hwclock-set
-fi
+sed -i '/systz/d' /lib/udev/hwclock-set
 
-if grep -q 'systz' /lib/udev/hwclock-set; then
-    sed sed -i '/systz/d' /lib/udev/hwclock-set
-fi
+##-------------------------------------------------------------------------------------------------
+
+## Setup PlatformIO
+
+sudo -H -u pi pip install -U platformio
 
 ##-------------------------------------------------------------------------------------------------
 echo "Sleepy Pi setup complete! Please reboot."
