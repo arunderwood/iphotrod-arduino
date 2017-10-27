@@ -1,5 +1,6 @@
 #!/bin/bash
 
+SCRIPTDIR=$(readlink -f "$0")
 
 assert () {
     echo "$1"
@@ -80,9 +81,6 @@ program="arduino"
 condition=$(which $program 2>/dev/null | grep -v "not found" | wc -l)
 if [ "$condition" -eq 0 ] ; then
     apt-get install -y arduino
-    # create the default sketchbook and libraries that the IDE would normally create on first run
-    mkdir /home/pi/sketchbook
-    mkdir /home/pi/sketchbook/libraries
 else
     echo "Arduino IDE is already installed - skipping"
 fi
@@ -133,7 +131,7 @@ sed -i'bk' -e's/console=serial0,115200.//'  /boot/cmdline.txt
 echo 'Link Serial Port to Arduino IDE...'
 if [ $RPi3 != true ]; then
     # Anything other than Rpi 3
-    mv "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/80-sleepypi.rules /etc/udev/rules.d/
+    mv SCRIPTDIR/rpi/80-sleepypi.rules /etc/udev/rules.d/
 fi
 # Note: On Rpi3 GPIO serial port defaults to ttyS0 which is what we want
 
@@ -144,15 +142,15 @@ echo 'Setup the Reset Pin...'
 program="autoreset"
 condition=$(which $program 2>/dev/null | grep -v "not found" | wc -l)
 if [ "$condition" -eq 0 ]; then
-    cd "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )" || exit 1
+    cd "$SCRIPTDIR" || exit 1
     wget https://github.com/spellfoundry/avrdude-rpi/archive/master.zip
     unzip master.zip
     cd ./avrdude-rpi-master/ || exit 1
     cp autoreset /usr/bin
     cp avrdude-autoreset /usr/bin
     mv /usr/bin/avrdude /usr/bin/avrdude-original
-    rm -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/master.zip
-    rm -R -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/avrdude-rpi-master
+    rm -f "$SCRIPTDIR"/master.zip
+    rm -R -f "$SCRIPTDIR"/avrdude-rpi-master
     ln -s /usr/bin/avrdude-autoreset /usr/bin/avrdude
 else
     echo "$program is already installed - skipping..."
@@ -167,7 +165,7 @@ if grep -q 'shutdowncheck.py' /etc/rc.local; then
     echo 'shutdowncheck.py is already setup - skipping...'
 else
     [ ! -d /usr/local/bin/SleepyPi  ] && mkdir /usr/local/bin/SleepyPi
-    mv -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/shutdowncheck.py /usr/local/bin/SleepyPi
+    mv -f "$SCRIPTDIR"/rpi/shutdowncheck.py /usr/local/bin/SleepyPi
     sed -i '/exit 0/i python /usr/local/bin/SleepyPi/shutdowncheck.py &' /etc/rc.local
 fi
 
