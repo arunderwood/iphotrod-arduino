@@ -117,7 +117,7 @@ sed -i'bk' -e's/console=serial0,115200.//'  /boot/cmdline.txt
 echo 'Link Serial Port to Arduino IDE...'
 if [ $RPi3 != true ]; then
     # Anything other than Rpi 3
-    mv "$(dirname "$0")"/80-sleepypi.rules /etc/udev/rules.d/
+    mv "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/80-sleepypi.rules /etc/udev/rules.d/
 fi
 # Note: On Rpi3 GPIO serial port defaults to ttyS0 which is what we want
 
@@ -151,7 +151,7 @@ if grep -q 'shutdowncheck.py' /etc/rc.local; then
     echo 'shutdowncheck.py is already setup - skipping...'
 else
     [ ! -d /usr/local/bin/SleepyPi  ] && mkdir /usr/local/bin/SleepyPi
-    mv -f "$(dirname "$0")"/shutdowncheck.py /home/pi/bin/SleepyPi
+    mv -f "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/shutdowncheck.py /home/pi/bin/SleepyPi
     sed -i '/exit 0/i python /usr/local/bin/SleepyPi/shutdowncheck.py &' /etc/rc.local
 fi
 
@@ -184,7 +184,7 @@ if [ -d "/home/pi/sketchbook/hardware/sleepy_pi2" ]; then
     echo "sketchbook/hardware/sleepy_pi2 exists - skipping..."
 else
     mkdir /home/pi/sketchbook/hardware/sleepy_pi2
-    mv "$(dirname "$0")"/boards.txt /home/pi/sketchbook/hardware/sleepy_pi2
+    mv "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/boards.txt /home/pi/sketchbook/hardware/sleepy_pi2
 fi
 
 # .../sketchbook/hardware/sleepy_pi
@@ -192,7 +192,7 @@ if [ -d "/home/pi/sketchbook/hardware/sleepy_pi" ]; then
     echo "sketchbook/hardware/sleepy_pi exists - skipping..."
 else
     mkdir /home/pi/sketchbook/hardware/sleepy_pi
-    mv "$(dirname "$0")"/boards.txt /home/pi/sketchbook/hardware/sleepy_pi
+    mv "$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"/boards.txt /home/pi/sketchbook/hardware/sleepy_pi
 fi
 
 ## Setup the Sleepy Pi Libraries
