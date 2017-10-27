@@ -1,5 +1,16 @@
 #!/bin/bash
 
+
+assert () {
+    echo "$1"
+    read ReadInput
+    if [[ "$ReadInput" == "Y" || "$ReadInput" == "y" ]]; then
+        return 1
+    else
+        return 0
+    fi
+}
+
 # trap "set +x; sleep 5; set -x" DEBUG
 
 # Check whether we are running sudo
@@ -17,45 +28,49 @@ else
     exit 1
 fi
 
+## Detecting Pi model
+RpiCPU=$(/bin/grep Revision /proc/cpuinfo | /usr/bin/cut -d ':' -f 2 | /bin/sed -e "s/ //g")
+if [ "$RpiCPU" == "a22082" ]; then
+    echo "RapberryPi 3 detected"
+    RPi3=true
+else
+    # RaspberryPi 2 or 1... let's say it's 2...
+    echo "RapberryPi 2 detected"
+    RPi3=false
+fi
+
 echo '================================================================================ '
 echo '|                                                                               |'
 echo '|                   Sleepy Pi Installation Script - Jessie                      |'
 echo '|                                                                               |'
 echo '================================================================================ '
 
-##Update and upgrade
-#sudo apt-get update && sudo apt-get upgrade -y
-
-## Start Installation
-echo 'Do you want to setup for a RPi 3 (Y) or Non-RPi 3 (n) ? (Y/n) '
-read RpiInput
-if [ "$RpiInput" == "Y" ]; then
-    echo "RPi 3 selected..."
-    RPi3=true
+assert 'Do you want to set the hostname ? (Y/n) '
+if [ $? == 1 ]; then
+    echo "Setting the hostname..."
+    sed -i "s/.*/$NEWHOSTNAME/g" /etc/hostname
+    sed -i "s/127.0.1.1.*/127.0.1.1\t$NEWHOSTNAME/g" /etc/hosts
 else
-    echo "Non-Rpi 3 (other Rpi) selected..."
-    RPi3=false
+    echo "Skipping setting the hostname..."
 fi
 
-echo 'Begin Installation ? (Y/n) '
-read ReadyInput
-if [ "$ReadyInput" == "Y" ]; then
+assert 'Begin Installation ? (Y/n) '
+if [ $? == 1 ]; then
     echo "Beginning installation..."
 else
     echo "Aborting installation"
     exit 0
 fi
 
-##-------------------------------------------------------------------------------------------------
-##-------------------------------------------------------------------------------------------------
-## Test Area
-# echo every line 
 set +x
 
-# exit 0
-## End Test Area
+## Install Arduino
+echo 'Installing addition packages...'
 
-##-------------------------------------------------------------------------------------------------
+apt-get update
+apt-get -y dist-upgrade
+apt-get install -y vim
+
 ##-------------------------------------------------------------------------------------------------
 
 ## Install Arduino
@@ -63,7 +78,7 @@ echo 'Installing Arduino IDE...'
 program="arduino"
 condition=$(which $program 2>/dev/null | grep -v "not found" | wc -l)
 if [ "$condition" -eq 0 ] ; then
-    apt-get install arduino
+    apt-get install -y arduino
     # create the default sketchbook and libraries that the IDE would normally create on first run
     mkdir /home/pi/sketchbook
     mkdir /home/pi/sketchbook/libraries
@@ -192,6 +207,12 @@ sed -i '/systz/d' /lib/udev/hwclock-set
 sudo -H -u pi pip2.7 install -U platformio
 
 ##-------------------------------------------------------------------------------------------------
-echo "Sleepy Pi setup complete! Please reboot."
+echo "Sleepy Pi setup complete!"
+assert "Would you like to reboot now? y/n"
+if [ $? == 1 ]; then
+    echo "Now rebooting..."
+    sleep 3
+    reboot
+fi
 exit 0
 ##-------------------------------------------------------------------------------------------------
