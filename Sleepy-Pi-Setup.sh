@@ -275,6 +275,24 @@ else
 fi
 
 ##-------------------------------------------------------------------------------------------------
+
+## Setup RTC
+echo 'Enable RTC...'
+if grep -q 'dtoverlay=i2c-rtc,pcf8523' /boot/config.txt; then
+    echo 'dtoverlay=i2c-rtc,pcf8523 is already set - skipping'
+else
+    echo 'dtoverlay=i2c-rtc,pcf8523' | sudo tee -a /boot/config.txt
+fi
+
+if grep -q 'if [ -e /run/systemd/system ] ; then' /lib/udev/hwclock-set; then
+    sed -e '/if [ -e /run/systemd/system ] ; then/,+3d' /lib/udev/hwclock-set
+fi
+
+if grep -q '/sbin/hwclock --rtc=$dev --systz --badyear' /lib/udev/hwclock-set; then
+    sed sed -i '//sbin/hwclock --rtc=$dev --systz --badyear/d' /lib/udev/hwclock-set
+fi
+
+##-------------------------------------------------------------------------------------------------
 echo "Sleepy Pi setup complete! Please reboot."
 exit 0
 ##-------------------------------------------------------------------------------------------------
