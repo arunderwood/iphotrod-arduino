@@ -69,8 +69,8 @@ set +x
 echo 'Installing addition packages...'
 
 apt-get update
-apt-get -y dist-upgrade
 apt-get install -y vim
+apt-get dist-upgrade
 
 ##-------------------------------------------------------------------------------------------------
 
@@ -199,13 +199,15 @@ else
     echo 'dtoverlay=i2c-rtc,pcf8523' | sudo tee -a /boot/config.txt
 fi
 
+sed -i '/\/run\/systemd\/system/,+2d' /lib/udev/hwclock-set
 sed -i '/systz/d' /lib/udev/hwclock-set
 
 ##-------------------------------------------------------------------------------------------------
 
 ## Setup PlatformIO
 
-sudo -H -u pi pip2.7 install -U platformio
+# sudo -H -u pi pip2.7 install -U platformio
+sudo pip2.7 install -U platformio
 
 ##-------------------------------------------------------------------------------------------------
 echo "Sleepy Pi setup complete!"
