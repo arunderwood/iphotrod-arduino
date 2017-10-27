@@ -47,6 +47,7 @@ echo '==========================================================================
 
 assert 'Do you want to set the hostname ? (Y/n) '
 if [ $? == 1 ]; then
+    read -r -p 'Hostname: ' NEWHOSTNAME
     echo "Setting the hostname..."
     sed -i "s/.*/$NEWHOSTNAME/g" /etc/hostname
     sed -i "s/127.0.1.1.*/127.0.1.1\t$NEWHOSTNAME/g" /etc/hosts
