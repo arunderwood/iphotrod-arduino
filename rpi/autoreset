@@ -2,14 +2,14 @@
 
 import fcntl
 import logging
-import logging.handlers
 import sys
 import os
 import re
 import time
 import RPi.GPIO as GPIO
 
-logger = logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
 handler = logging.handlers.SysLogHandler(address='/dev/log')
 logger.addHandler(handler)
 
