@@ -147,15 +147,10 @@ echo 'Setup the Reset Pin...'
 program="autoreset"
 condition=$(which $program 2>/dev/null | grep -v "not found" | wc -l)
 if [ "$condition" -eq 0 ]; then
-    cd "$SCRIPTDIR" || exit 1
-    wget https://github.com/spellfoundry/avrdude-rpi/archive/master.zip
-    unzip master.zip
-    cd ./avrdude-rpi-master/ || exit 1
-    cp autoreset /usr/bin
-    cp avrdude-autoreset /usr/bin
+    cp "$SCRIPTDIR"/autoreset /usr/bin
+    cp "$SCRIPTDIR"/avrdude-autoreset /usr/bin
+    chmod +x /usr/bin/autoreset /usr/bin/avrdude-autoreset
     mv /usr/bin/avrdude /usr/bin/avrdude-original
-    rm -f "$SCRIPTDIR"/master.zip
-    rm -R -f "$SCRIPTDIR"/avrdude-rpi-master
     ln -s /usr/bin/avrdude-autoreset /usr/bin/avrdude
 else
     echo "$program is already installed - skipping..."
@@ -210,7 +205,7 @@ sed -i '/systz/d' /lib/udev/hwclock-set
 ## Setup PlatformIO
 
 # sudo -H -u pi pip2.7 install -U platformio
-sudo pip2.7 -q install -U platformio
+sudo pip2.7 -q install -U platformio RPi.GPIO
 
 ##-------------------------------------------------------------------------------------------------
 echo "Sleepy Pi setup complete!"
