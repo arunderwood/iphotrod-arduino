@@ -147,8 +147,8 @@ echo 'Setup the Reset Pin...'
 program="autoreset"
 condition=$(which $program 2>/dev/null | grep -v "not found" | wc -l)
 if [ "$condition" -eq 0 ]; then
-    cp "$SCRIPTDIR"/autoreset /usr/bin
-    cp "$SCRIPTDIR"/avrdude-autoreset /usr/bin
+    cp "$SCRIPTDIR"/rpi/autoreset /usr/bin
+    cp "$SCRIPTDIR"/rpi/avrdude-autoreset /usr/bin
     chmod +x /usr/bin/autoreset /usr/bin/avrdude-autoreset
     mv /usr/bin/avrdude /usr/bin/avrdude-original
     ln -s /usr/bin/avrdude-autoreset /usr/bin/avrdude
