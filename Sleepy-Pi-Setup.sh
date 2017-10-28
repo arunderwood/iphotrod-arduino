@@ -1,10 +1,11 @@
 #!/bin/bash
 
-SCRIPTDIR=$(readlink -f "$0")
+SCRIPT=$(realpath -s "$0")
+SCRIPTDIR=$(dirname "$SCRIPT")
 
 assert () {
     echo "$1"
-    read ReadInput
+    read -r ReadInput
     if [[ "$ReadInput" == "Y" || "$ReadInput" == "y" ]]; then
         return 1
     else
@@ -165,7 +166,7 @@ if grep -q 'shutdowncheck.py' /etc/rc.local; then
     echo 'shutdowncheck.py is already setup - skipping...'
 else
     [ ! -d /usr/local/bin/SleepyPi  ] && mkdir /usr/local/bin/SleepyPi
-    mv -f "$SCRIPTDIR"/rpi/shutdowncheck.py /usr/local/bin/SleepyPi
+    mv -f "$SCRIPTDIR/rpi/80-sleepypi.rules" /usr/local/bin/SleepyPi
     sed -i '/exit 0/i python /usr/local/bin/SleepyPi/shutdowncheck.py &' /etc/rc.local
 fi
 
