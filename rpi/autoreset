@@ -1,17 +1,11 @@
 #!/usr/bin/python
 
 import fcntl
-import logging
-import sys
 import os
+import sys
 import re
 import time
 import RPi.GPIO as GPIO
-
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-handler = logging.handlers.SysLogHandler(address='/dev/log')
-logger.addHandler(handler)
 
 fd = sys.stdin.fileno()
 fl = fcntl.fcntl(fd, fcntl.F_GETFL)
@@ -24,7 +18,7 @@ start = time.time()
 
 def reset():
     pin = 22
-    logging.info('Resetting pin %s', pin)
+    print('Resetting pin %s' % pin)
     GPIO.setup(pin, GPIO.OUT)
     GPIO.output(pin, GPIO.HIGH)
     time.sleep(0.12)
@@ -35,18 +29,16 @@ def process():
     while True:
         try:
             duration = time.time() - start
-            std_input = sys.stdin.readline().strip()
-            logging.debug('Input: ', std_input)
-            if dtr.match(std_input):
+            input = sys.stdin.readline().strip()
+            if dtr.match(input):
                 reset()
                 return
             elif duration > 5000:
                 return
-        except BaseException as error:
-            logging.exception(error)
+        except BaseException:
             continue
 
 
 process()
 GPIO.cleanup()
-logging.info('Done with autoreset')
+print "done with autoreset"
