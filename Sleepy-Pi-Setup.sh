@@ -46,6 +46,10 @@ echo '|                                                                         
 echo '|                   Sleepy Pi Installation Script - Jessie                      |'
 echo '|                                                                               |'
 echo '================================================================================ '
+echo
+echo "Script: $SCRIPT"
+echo "Script directory: $SCRIPTDIR"
+echo
 
 assert 'Do you want to set the hostname ? (Y/n) '
 if [ $? == 1 ]; then
