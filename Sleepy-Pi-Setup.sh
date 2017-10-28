@@ -32,7 +32,7 @@ fi
 
 ## Detecting Pi model
 RpiCPU=$(/bin/grep Revision /proc/cpuinfo | /usr/bin/cut -d ':' -f 2 | /bin/sed -e "s/ //g")
-if [ "$RpiCPU" == "a22082" ]; then
+if [ "$RpiCPU" == "a02082" ]; then
     echo "RapberryPi 3 detected"
     RPi3=true
 else
@@ -72,7 +72,7 @@ fi
 set +x
 
 ## Install Arduino
-echo 'Installing addition packages...'
+echo 'Installing additional packages...'
 
 apt-get -qq update
 apt-get -qq install -y vim
@@ -136,7 +136,7 @@ sed -i'bk' -e's/console=serial0,115200.//'  /boot/cmdline.txt
 echo 'Link Serial Port to Arduino IDE...'
 if [ $RPi3 != true ]; then
     # Anything other than Rpi 3
-    mv SCRIPTDIR/rpi/80-sleepypi.rules /etc/udev/rules.d/
+    mv "$SCRIPTDIR/rpi/80-sleepypi.rules" /etc/udev/rules.d/
 fi
 # Note: On Rpi3 GPIO serial port defaults to ttyS0 which is what we want
 
