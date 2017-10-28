@@ -74,9 +74,9 @@ set +x
 ## Install Arduino
 echo 'Installing addition packages...'
 
-apt-get update
-apt-get install -y vim
-apt-get dist-upgrade
+apt-get -qq update
+apt-get -qq install -y vim
+apt-get -qq dist-upgrade
 
 ##-------------------------------------------------------------------------------------------------
 
@@ -85,7 +85,7 @@ echo 'Installing Arduino IDE...'
 program="arduino"
 condition=$(which $program 2>/dev/null | grep -v "not found" | wc -l)
 if [ "$condition" -eq 0 ] ; then
-    apt-get install -y arduino
+    apt-get -qq install -y arduino
 else
     echo "Arduino IDE is already installed - skipping"
 fi
@@ -189,7 +189,7 @@ echo 'Install i2c-tools...'
 if hash i2cget 2>/dev/null; then
     echo 'i2c-tools are installed already - skipping...'
 else
-    sudo apt-get install -y i2c-tools
+    sudo apt-get -qq install -y i2c-tools
 fi
 
 ##-------------------------------------------------------------------------------------------------
@@ -210,7 +210,7 @@ sed -i '/systz/d' /lib/udev/hwclock-set
 ## Setup PlatformIO
 
 # sudo -H -u pi pip2.7 install -U platformio
-sudo pip2.7 install -U platformio
+sudo pip2.7 -q install -U platformio
 
 ##-------------------------------------------------------------------------------------------------
 echo "Sleepy Pi setup complete!"
