@@ -204,6 +204,7 @@ sed -i '/systz/d' /lib/udev/hwclock-set
 
 ## Setup PlatformIO
 
+echo 'Installing PlatformIO...'
 # sudo -H -u pi pip2.7 install -U platformio
 sudo pip2.7 -q install -U platformio RPi.GPIO
 

@@ -419,11 +419,13 @@
 	},
 	"file_history":
 	[
+		"/Users/andrewunderwood/checkouts/iphotrod-arduino/rpi/avrdude-autoreset",
+		"/Users/andrewunderwood/checkouts/iphotrod-arduino/rpi/autoreset",
+		"/Users/andrewunderwood/checkouts/iphotrod-arduino/Sleepy-Pi-Setup.sh",
+		"/Users/andrewunderwood/checkouts/iphotrod-arduino/src/LowVoltageShutdown.ino",
 		"/Users/andrewunderwood/checkouts/iphotrod-arduino/.travis.yml",
 		"/Users/andrewunderwood/checkouts/iphotrod-arduino/rpi/80-sleepypi.rules",
 		"/Users/andrewunderwood/checkouts/iphotrod-arduino/Makefile",
-		"/Users/andrewunderwood/checkouts/iphotrod-arduino/Sleepy-Pi-Setup.sh",
-		"/Users/andrewunderwood/checkouts/iphotrod-arduino/src/LowVoltageShutdown.ino",
 		"/Users/andrewunderwood/checkouts/iphotrod-arduino/Readme.md",
 		"/Users/andrewunderwood/checkouts/iphotrod-arduino/platformio.ini",
 		"/Users/andrewunderwood/checkouts/iphotrod-arduino/rpi-installation.sh",
@@ -544,9 +546,7 @@
 		"/Users/andrewunderwood/checkouts/shipyard-harbour/cloudformation/prod/us-east-1/demo.json",
 		"/Users/andrewunderwood/checkouts/shipyard-harbour/cloudformation/prod/eu-west-1/prod.json",
 		"/Users/andrewunderwood/checkouts/shipyard-harbour/cloudformation/corp/us-east-1/inf-tools.json",
-		"/Users/andrewunderwood/checkouts/shipyard-harbour/cloudformation/test.py",
-		"/Users/andrewunderwood/checkouts/shipyard-harbour/README.AWS.md",
-		"/Users/andrewunderwood/checkouts/harbour-lambda-datadog/cloudformation/template.yaml"
+		"/Users/andrewunderwood/checkouts/shipyard-harbour/cloudformation/test.py"
 	],
 	"find":
 	{
