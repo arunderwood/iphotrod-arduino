@@ -181,7 +181,7 @@ fi
 
 ## Setup RTC
 echo 'Enable RTC...'
-if grep -q 'dtoverlay=' | grep -q 'i2c-rtc,pcf8523' /boot/config.txt; then
+if grep -wE "dtoverlay=|i2c-rtc,pcf8523" /boot/config.txt; then
     echo 'dtoverlay=i2c-rtc,pcf8523 is already set - skipping'
 else
     sed -i '/^dtoverlay=/ s/$/,i2c-rtc,pcf8523/' /boot/config.txt
