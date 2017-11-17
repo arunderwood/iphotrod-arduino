@@ -74,6 +74,7 @@ set +x
 ## Install Arduino
 echo 'Installing additional packages...'
 
+curl -sLS https://apt.adafruit.com/add | sudo bash
 apt-get -qq update
 apt-get -qq install -y vim
 apt-get -qq dist-upgrade
@@ -83,7 +84,7 @@ apt-get -qq dist-upgrade
 ## Install Arduino
 echo 'Installing Arduino IDE...'
 program="arduino"
-condition=$(which $program 2>/dev/null | grep -v "not found" | wc -l)
+condition=$(which $program 2>/dev/null | grep -c "not found")
 if [ "$condition" -eq 0 ] ; then
     apt-get -qq install -y arduino
 else
@@ -139,22 +140,6 @@ if [ $RPi3 != true ]; then
     mv "$SCRIPTDIR/rpi/80-sleepypi.rules" /etc/udev/rules.d/
 fi
 # Note: On Rpi3 GPIO serial port defaults to ttyS0 which is what we want
-
-##-------------------------------------------------------------------------------------------------
-
-## Setup the Reset Pin
-echo 'Setup the Reset Pin...'
-program="autoreset"
-condition=$(which $program 2>/dev/null | grep -v "not found" | wc -l)
-if [ "$condition" -eq 0 ]; then
-    cp "$SCRIPTDIR"/rpi/autoreset /usr/bin
-    cp "$SCRIPTDIR"/rpi/avrdude-autoreset /usr/bin
-    chmod +x /usr/bin/autoreset /usr/bin/avrdude-autoreset
-    mv /usr/bin/avrdude /usr/bin/avrdude-original
-    ln -s /usr/bin/avrdude-autoreset /usr/bin/avrdude
-else
-    echo "$program is already installed - skipping..."
-fi
 
 ##-------------------------------------------------------------------------------------------------
 
