@@ -74,7 +74,6 @@ set +x
 ## Install Arduino
 echo 'Installing additional packages...'
 
-curl -sLS https://apt.adafruit.com/add | sudo bash
 apt-get -qq update
 apt-get -qq install -y vim
 apt-get -qq dist-upgrade
