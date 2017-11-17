@@ -102,6 +102,12 @@ else
     echo 'enable_uart=1' | sudo tee -a /boot/config.txt
 fi
 if [ $RPi3 = true ]; then
+    #Set Bluetooth to use the Soft UART so we can use hardware UART on /dev/ttyAMA0 for serial comms 
+    if grep -q 'pi3-miniuart-bt' /boot/config.txt; then
+        echo 'pi3-miniuart-bt is already set - skipping'
+    else
+        sed -i '/^dtoverlay=/ s/$/,pi3-miniuart-bt/' /boot/config.txt
+    fi
     if grep -q 'core_freq=400' /boot/config.txt; then
         echo 'The frequency of GPU processor core is set to 400MHz already - skipping'
     else
@@ -175,10 +181,10 @@ fi
 
 ## Setup RTC
 echo 'Enable RTC...'
-if grep -q 'dtoverlay=i2c-rtc,pcf8523' /boot/config.txt; then
+if grep -q 'dtoverlay=' | grep -q 'i2c-rtc,pcf8523' /boot/config.txt; then
     echo 'dtoverlay=i2c-rtc,pcf8523 is already set - skipping'
 else
-    echo 'dtoverlay=i2c-rtc,pcf8523' | sudo tee -a /boot/config.txt
+    sed -i '/^dtoverlay=/ s/$/,i2c-rtc,pcf8523/' /boot/config.txt
 fi
 
 sed -i '/\/run\/systemd\/system/,+2d' /lib/udev/hwclock-set
