@@ -181,7 +181,7 @@ fi
 
 ## Setup RTC
 echo 'Enable RTC...'
-if grep -wE "dtoverlay=|i2c-rtc,pcf8523" /boot/config.txt; then
+if grep -qwE "dtoverlay=|i2c-rtc,pcf8523" /boot/config.txt; then
     echo 'dtoverlay=i2c-rtc,pcf8523 is already set - skipping'
 else
     sed -i '/^dtoverlay=/ s/$/,i2c-rtc,pcf8523/' /boot/config.txt
@@ -195,7 +195,7 @@ sed -i '/systz/d' /lib/udev/hwclock-set
 ## Setup PlatformIO
 
 echo 'Installing PlatformIO...'
-# sudo -H -u pi pip2.7 install -U platformio
+
 sudo pip2.7 -q install -U platformio RPi.GPIO
 
 ##-------------------------------------------------------------------------------------------------
