@@ -33,8 +33,11 @@ cache:
     directories:
         - "~/.platformio"
 
+env:
+    - PLATFORMIO_CI_SRC=src/LowVoltageShutdown.ino
+
 install:
     - pip install -U platformio
 
 script:
-    - platformio run
+    - platformio ci --project-conf=platformio.ini --board=sleepypi
