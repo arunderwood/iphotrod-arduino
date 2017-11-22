@@ -78,19 +78,19 @@ apt-get -qq update
 apt-get -qq install -y vim
 apt-get -qq dist-upgrade
 
-##-------------------------------------------------------------------------------------------------
+# ##-------------------------------------------------------------------------------------------------
 
-## Install Arduino
-echo 'Installing Arduino IDE...'
-program="arduino"
-condition=$(which $program 2>/dev/null | grep -c "not found")
-if [ "$condition" -eq 0 ] ; then
-    apt-get -qq install -y arduino
-else
-    echo "Arduino IDE is already installed - skipping"
-fi
+# ## Install Arduino
+# echo 'Installing Arduino IDE...'
+# program="arduino"
+# condition=$(which $program 2>/dev/null | grep -c "not found")
+# if [ "$condition" -eq 0 ] ; then
+#     apt-get -qq install -y arduino
+# else
+#     echo "Arduino IDE is already installed - skipping"
+# fi
 
-##-------------------------------------------------------------------------------------------------
+# ##-------------------------------------------------------------------------------------------------
 
 ## Enable Serial Port
 # Findme look at using sed to toggle it
@@ -101,25 +101,27 @@ if grep -q 'enable_uart=1' /boot/config.txt; then
 else
     echo 'enable_uart=1' | sudo tee -a /boot/config.txt
 fi
-if [ $RPi3 = true ]; then
-    #Set Bluetooth to use the Soft UART so we can use hardware UART on /dev/ttyAMA0 for serial comms 
-    if grep -q 'pi3-miniuart-bt' /boot/config.txt; then
-        echo 'pi3-miniuart-bt is already set - skipping'
-    else
-        sed -i '/^dtoverlay=/ s/$/,pi3-miniuart-bt/' /boot/config.txt
-    fi
-    if grep -q 'core_freq=400' /boot/config.txt; then
-        echo 'The frequency of GPU processor core is set to 400MHz already - skipping'
-    else
-        echo 'core_freq=400' | sudo tee -a /boot/config.txt
-        fi
-    else
-        if grep -q 'core_freq=250' /boot/config.txt; then
-            echo 'The frequency of GPU processor core is set to 250MHz already - skipping'
-        else
-            echo 'core_freq=250' | sudo tee -a /boot/config.txt
-            fi
-        fi
+# if [ $RPi3 = true ]; then
+#     #Set Bluetooth to use the Soft UART so we can use hardware UART on /dev/ttyAMA0 for serial comms 
+#     if grep -q 'pi3-miniuart-bt' /boot/config.txt; then
+#         echo 'pi3-miniuart-bt is already set - skipping'
+#     else
+#         sed -i '/^dtoverlay=/ s/$/,pi3-miniuart-bt/' /boot/config.txt
+#     fi
+#     if grep -q '^core_freq=400' /boot/config.txt; then
+#         echo 'The frequency of GPU processor core is set to 400MHz already - skipping'
+#     else
+#         echo 'Setting core_freq=400 in /boot/config.txt'
+#         sed -i 's/^core_freq=.*/core_freq=400/g' /boot/config.txt
+#         fi
+#     else
+#         if grep -q '^core_freq=250' /boot/config.txt; then
+#             echo 'The frequency of GPU processor core is set to 250MHz already - skipping'
+#         else
+#             echo 'Setting core_freq=250 in /boot/config.txt'
+#             sed -i 's/^core_freq=.*/core_freq=250/g' /boot/config.txt
+#             fi
+#         fi
 
 ## Disable Serial login
 echo 'Disabling Serial Login...'
@@ -150,13 +152,13 @@ fi
 
 ## Getting Sleepy Pi to shutdown the Raspberry Pi
 echo 'Setting up the shutdown...'
-cd ~ || exit 1
 if grep -q 'shutdowncheck.py' /etc/rc.local; then
     echo 'shutdowncheck.py is already setup - skipping...'
 else
-    [ ! -d /usr/local/bin/SleepyPi  ] && mkdir /usr/local/bin/SleepyPi
-    mv -f "$SCRIPTDIR/rpi/80-sleepypi.rules" /usr/local/bin/SleepyPi
-    sed -i '/exit 0/i python /usr/local/bin/SleepyPi/shutdowncheck.py &' /etc/rc.local
+    mkdir -p /home/pi/bin/SleepyPi
+    mv -f rpi/shutdowncheck.py /home/pi/bin/SleepyPi
+    sed -i '/exit 0/i python /home/pi/bin/SleepyPi/shutdowncheck.py &' /etc/rc.local
+    # echo "python /home/pi/bin/SleepyPi/shutdowncheck.py &" | sudo tee -a /etc/rc.local
 fi
 
 ##-------------------------------------------------------------------------------------------------
