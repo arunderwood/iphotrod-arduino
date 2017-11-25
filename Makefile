@@ -1,5 +1,8 @@
 monitor:
-	platformio device monitor -p /dev/S0
+	platformio device monitor -p /dev/ttyS0
+	
+screen-monitor:
+	screen /dev/ttyS0 9600
 
 flash:
 	platformio run -t upload
