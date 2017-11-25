@@ -1,5 +1,5 @@
 monitor:
-	platformio device monitor -p /dev/serial0
+	platformio device monitor -p /dev/S0
 
 flash:
 	platformio run -t upload
