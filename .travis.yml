@@ -37,4 +37,4 @@ install:
     - pip install -U platformio
 
 script:
-    - platformio ci --project-conf=platformio.ini --board=sleepypi -v
+    - platformio ci --project-conf=/path/to/platoformio.ini
