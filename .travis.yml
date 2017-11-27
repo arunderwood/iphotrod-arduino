@@ -37,4 +37,6 @@ install:
     - pip install -U platformio
 
 script:
+    - ls -l
+    - tree
     - platformio ci --project-conf=platoformio.ini
