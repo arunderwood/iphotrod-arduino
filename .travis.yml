@@ -29,6 +29,9 @@ python:
     - "2.7"
 
 sudo: false
+cache:
+    directories:
+        - "~/.platformio"
 
 env:
     - PLATFORMIO_CI_SRC=src/LowVoltageShutdown.ino
